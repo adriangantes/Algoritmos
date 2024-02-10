@@ -1,0 +1,187 @@
+
+Fecha: 18/01/24                                      Grupo: 1.2
+
+ # Informe Algoritmos Examen (Algoritmo de ordenación) #
+
+
+Nombre/Login:
+
+  AUTHOR: Adrián Edreira Gantes
+  LOGIN: adrian.gantes@udc.es
+  DNI: 79347143-H
+
+
+Objetivo:
+
+    En esta práctica utilizaremos un algoritmo de ordenación, Quicksort.
+  
+    Nuestro objetivo es demostrar la complejidad empírica de dichos algoritmos
+  para 3 casos diferentes (vectores aleatorios, descendentes y ascendentes),
+  obteniendo sus tiempos de ejecución y calculando su complejidad teórica.
+
+
+Especificaciones de la máquina:
+
+  + Equipo: Victus by HP Laptop 16-d1033ns
+  + OS: Kali GNU/Linux Rolling 2023.3
+  + Procesador: Intel Core i7-12700H, 4.7GHz, 24 MB L3 cache,
+ 	        14 núcleos y 20 hilos.
+  + RAM: 16 GB DDR5-4800 Mhz (2 x 8 GB)
+  + Kernel: Linux 6.5.0-kali1-amd64
+  + Compilador: gcc (Debian 13.2.0-2) 13.2.0
+
+
+Unidades:
+
+  Las unidades empleadas para la medida de los tiempos son microsegundos(micros).
+
+
+void auxOrd (int v[], int izq, int der){
+
+    int piv, tmp, j, i;
+
+    if (izq < der){
+        piv = v[der - 1];
+        tmp = v[izq];
+        v[izq] = piv;
+        v[der - 1] = tmp;
+        i = izq + 1;
+        j = der;
+
+        while (i <= j){
+            while (v[j] > piv){
+                j--;
+            }
+            while (i <= der && v[i] < piv){
+                i++;
+            }
+            if (i<=j){
+                tmp = v[i];
+                v[i] = v[j];
+                v[j] = tmp;
+                i++;j--;
+            }
+        }
+        tmp = v[izq];
+        v[izq] = v[j];
+        v[j] = tmp;
+        auxOrd (v, izq, j-1);
+        auxOrd (v, j+1, der);
+    }
+}
+
+
+Método Empleado:
+
+    Lo primero que hice fue implementar el algoritmo de ordenación Quicksort.
+  
+    Después de ello, lo que hice fue comprobar que el algoritmo de ordenación
+  implementado funciona correctamente con vectores descendentes, ascendentes y
+  pseudoaleatorios. Tras ello creo una función para medir los tiempos de 
+  ejecución del algoritmo con cada tipo de vector, comprobando la hora de la
+  máquina antes y después de ejecutar el algoritmo correspondiente.
+
+    Cabe destacar que para tiempos menores de 500micros calcularemos los tiempos
+  de los algoritmos mediante la siguiente formula: (tb-ta)/k (donde k son las
+  repeticiones, en este caso 1000; tb, que corresponde a la hora del sistema
+  después de ejecutar el algoritmo; y ta, que corresponde a la hora del sistema
+  antes de ejecutar el algoritmo). Estos casos se marcarán en la tabla con un
+  "*" al final de la línea. 
+
+    Ejecuto el código 4 veces para evitar mediciones anómalas y compruebo que los
+  tiempos (t(n)) devueltos por las funciones son correctos y los registr en una
+  tabla con su respectiva cantidad de valores (n) y sus correspondientes cotas.
+  
+
+Complejidad teórica:
+
+  * Algoritmo:
+     - Aleatorio:    O (n * log(n)) 
+     - Descendente:  O (n^2)
+     - Ascendente:   O (n^2)
+
+
+
+Resultados:	
+		
+ # Quicksort #
+
+ Vector aleatorio:
+ 
+   - Cota subestimada: f(n) = n^0.9
+   - Cota ajustada: g(n) = n^1.1
+   - Cota sobreestimada: h(n) = n^1.3
+   
+  n            t(n)          t(n)/f(n)       t(n)/g(n)       t(n)/h(n)      t<500
+
+  500          24.857       0.09254985      0.02670433      0.00770527        *
+ 1000          57.605       0.11493709      0.02887089      0.00725204        *
+ 2000         121.752       0.13018145      0.02846709      0.00622497        *
+ 4000         259.850       0.14889110      0.02834371      0.00539566        *
+ 8000         562.000       0.17256604      0.02859811      0.00473936
+16000        1219.000       0.20058374      0.02893821      0.00417492
+32000        2716.000       0.23949408      0.03007910      0.00377776
+
+   La cota ajustada tiende a la constante C=0.028
+
+
+ Vector descendente:
+
+   - Cota subestimada: f(n) = n^1.8
+   - Cota ajustada: g(n) = n^2
+   - Cota sobreestimada: h(n) = n^2.1
+   
+  n            t(n)          t(n)/f(n)       t(n)/g(n)       t(n)/h(n)      t<500    Anomalía
+
+  500          86.846       0.00120394      0.00034738      0.00018660        *         #
+ 1000         322.060       0.00128214      0.00032206      0.00016141        *         #
+ 2000        1730.000       0.00197784      0.00043250      0.00020225                  #
+ 4000        4421.000       0.00145148      0.00027631      0.00012056
+ 8000       17754.000       0.00167392      0.00027741      0.00011293
+16000       70180.000       0.00190019      0.00027414      0.00010413
+32000      282179.000       0.00219409      0.00027557      0.00009766
+
+   La cota ajustada tiende a la constante C=0.00027
+   
+   # Anomalía para valores de n <=2000 con tiempos más grandes de lo esperado.
+
+
+ Vector ascendente:
+
+   - Cota subestimada: f(n) = n^1.8
+   - Cota ajustada: g(n) = n^2
+   - Cota sobreestimada: h(n) = n^2.1
+  
+  n            t(n)          t(n)/f(n)       t(n)/g(n)       t(n)/h(n)      t<500
+
+  500          42.813       0.00059351      0.00017125      0.00009199        *
+ 1000         158.297       0.00063019      0.00015830      0.00007934        *
+ 2000         630.000       0.00072026      0.00015750      0.00007365
+ 4000        2334.000       0.00076629      0.00014588      0.00006365
+ 8000        9253.000       0.00087241      0.00014458      0.00005886
+16000       37666.000       0.00101984      0.00014713      0.00005589
+32000      149660.000       0.00116369      0.00014615      0.00005180
+
+   La cota ajustada tiende a la constante C=0.00015
+   
+
+Conclusión:
+
+    Según los resultados obtenidos hemos llegado a las siguientes conclusiones:
+    
+      - La complejidad teórica de Quicksort es O(n log(n)) en el mejor caso y
+        O(n^2) en el peor, con vectores ordenados ascendente o descendentemente.
+        
+      - Observando las tablas podemos deducir dos cosas. Primero vemos que la
+        complejidad teórica esperada para vectores aleatorios es algo menor
+        en la complejidad computacional, esto se debe a su implementación. Por
+        otra parte, la complejidad para vectores ordenados ascendente o
+        descendentemente es la esperada por la complejidad teórica, siendo O(n^2).
+        
+      - Por último, debido a los resultados obtenidos podemos afirmar que para
+        vectores previamente ordenados, existen mejores algoritmos como fusión o,
+        en el caso de un vector ascendente, insercción. Para vectores aleatorios
+        Quicksort es una buena opción.
+
+
+

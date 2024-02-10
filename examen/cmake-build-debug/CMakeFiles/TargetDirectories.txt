@@ -1,0 +1,3 @@
+/home/adrian/Documents/examen/cmake-build-debug/CMakeFiles/examen.dir
+/home/adrian/Documents/examen/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/adrian/Documents/examen/cmake-build-debug/CMakeFiles/rebuild_cache.dir
