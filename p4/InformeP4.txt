@@ -1,0 +1,156 @@
+
+Fecha: 22/11/23                                      Grupo: 1.2
+
+ # Informe Algoritmos P4 (Algoritmo para Grafos: Problema del camino mínimo) #
+
+
+Nombres/Logins:
+
+ * AUTHOR 1: Adrián Edreira Gantes    LOGIN 1: adrian.gantes@udc.es
+ * AUTHOR 2: Ángela Fouz Suárez       LOGIN 2: angela.fouz@udc.es
+ * AUTHOR 3: Gael Saavedra Pinho      LOGIN 3: g.spinho@udc.es
+
+
+Objetivo:
+
+    En esta práctica utilizaremos el algoritmo dijkstra.
+   
+    Nuestro objetivo en esta práctica es calcular la complejidad
+  empírica del algoritmo dijkstra que encuentra los caminos mínimos
+  desde el origen hacia los demás nodos del grafo. 
+
+
+Especificaciones de la máquina:
+
+  + Equipo: Victus by HP Laptop 16-d1033ns
+  + OS: Kali GNU/Linux Rolling 2023.3
+  + Procesador: Intel Core i7-12700H, 4.7GHz, 24 MB L3 cache,
+ 	        14 núcleos y 20 hilos.
+  + RAM: 16 GB DDR5-4800 Mhz (2 x 8 GB)
+  + Kernel: Linux 6.5.0-kali1-amd64
+  + Compilador: gcc (Debian 13.2.0-2) 13.2.0
+
+
+Unidades:
+
+  Las unidades empleadas para la medida de los tiempos son microsegundos(micros).
+
+
+Algoritmo Dijkstra:
+
+void dijkstra(matriz grafo, matriz distancias, int tam) {
+    int n, i, j, min, v=0, cont = 0;
+    int *noVisitados = malloc(tam*sizeof(int));
+    for (n=0; n<tam; n++) {
+        for (i=0; i<tam; i++) {
+            noVisitados[i] = 1;
+            distancias[n][i] = grafo[n][i];
+        }
+        noVisitados[n] = 0;
+
+
+        while (cont < tam - 2){
+            min=TAM_MAX;
+            for (i = 0; i < tam; i++) {
+                if (noVisitados[i] && distancias[n][i] < min) {
+                    min = distancias[n][i];
+                    v = i;
+                }
+            }
+            noVisitados[v] = 0;
+
+            for (j = 0; j < tam; j++) {
+                if (noVisitados[j] && 
+		    distancias[n][j] > distancias[n][v] + grafo[v][j]) {
+                    distancias[n][j] = distancias[n][v] + grafo[v][j];
+                }
+            }
+            cont++;
+        }
+        cont=0;
+    }
+    free(noVisitados);
+}
+
+
+
+Método Empleado:
+
+    Lo primero que hicimos fue implementar y comprobar que el algoritmo Dijkstra
+  se ejecutase correctamente comparandolos con los resultados de los ejemplos
+  propuestos. Tras ello intentaremos demostrar empíricamente, que para cualquier
+  matriz de n elementos, su ejecución se llevaba a cabo en O(n^2).
+ 
+    Por último creamos una funcion para medir los tiempos de ejecución del 
+  algoritmo, comprobando la hora de la máquina antes y después de ejecutarlo.
+
+    Cabe destacar que para tiempos menores de 500micros calcularemos los tiempos
+  del algoritmo mediante la siguiente formula: (tb-ta)/k (donde k son las
+  repeticiones, en este caso 1000; tb, que corresponde a la hora del sistema
+  después de ejecutar el algoritmo; y ta, que corresponde a la hora del sistema
+  antes de ejecutar el algoritmo). Estos casos se marcarán en la tabla con un
+  "*" al final de la línea. 
+
+    Ejecutamos nuestro código repetidas veces para evitar mediciones anómalas, las
+  cuales están reportadas más adelante con un "#", comprobamos que los tiempos (t(n))
+  devueltos por nuestras funciones son correctos y los registramos en una tabla con
+  su respectiva cantidad de valores (n) y sus correspondientes cotas.   
+  
+  
+  
+Cálculo de complejidad teórica:
+
+    La forma empleada para calcular la complejidad teórica del algoritmo es observando los
+  bucles anidados y multiplicando su complejidad.
+  
+    Para el cálculo de la complejidad teórica del algoritmo de Dijkstra nos fijamos en 
+  los bucles que posee dicho algoritmo en su código, como podemos ver tiene varios 
+  bucles anidados, gracias a ello podemos deducir que su complejidad teórica es O(n^2).
+  
+  * Algoritmo Dijkstra O(n^2)
+
+
+Resultados:
+
+  Calculo de distancias:
+
+    - Cota Subestimada:  f(n) = n^2.5
+    - Cota Ajustada:     g(n) = n^2.75
+    - Cota Sobrestimada: h(n) = n^3
+    
+
+  n           t(n)         t(n)/f(n)       t(n)/g(n)       t(n)/h(n)   t<500    Anomalía
+
+   8           5.012       0.027688        0.016463        0.009789      *         #
+  16          37.238       0.036365        0.018183        0.009091      *
+  32         252.970       0.043671        0.018361        0.007720      *
+  64        1760.000       0.053711        0.018990        0.006714
+ 128       11113.000       0.059952        0.017824        0.005299
+ 256       74200.000       0.070763        0.017691        0.004423
+ 512      517648.000       0.087269        0.018346        0.003857
+
+	
+   La cota ajustada tiende a la constante C=0.018000
+   
+   # Anomalía para valores de n=8 con tiempos más pequeños a los esperados.
+ 
+
+Conclusión:
+
+  Según los resultados obtenidos hemos llegado a las siguientes conclusiones:
+
+   - Podemos ver que la complejidad empírica del algoritmo Dijkstra no es la
+     esperada (O(n^2.75)), siendo superior a su complejidad teórica O(n^2).
+     Esto podría deberse a cuestiones relacionadas con el compilador o a la
+     implementación del algoritmo en código.
+
+   - Deducimos que este algoritmo tiene una complejidad elevada para hayar el
+     camino mínimo de un grafo de n vértices, pudiendo existir alguno mejor
+     para hacer la misma tarea.
+
+   
+  
+
+    
+ 	
+

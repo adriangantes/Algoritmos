@@ -1,0 +1,128 @@
+#Informe práctica P1 (algoritmos de suma máxima):
+
+
+      En esta práctica nuestro objetivo es medir los tiempos de ejecución
+   de dos algoritmos, los cuales tienen el objetivo de encontrar la
+   suma máxima de un vector de datos pseudoaleatorios.
+
+Especificaciones de la máquina:
+
+ +Equipo: Victus by HP Laptop 16-d1033ns
+ +OS: Kali GNU/Linux Rolling 2023.3
+ +Procesador: Intel Core i7-12700H, 4.7GHz, 24 MB L3 cache,
+ 	      14 núcleos y 20 hilos.
+ +RAM: 16 GB DDR5-4800 Mhz (2 x 8 GB)
+ +Kernel: Linux 6.5.0-kali1-amd64
+ +Compilador: gcc (Debian 13.2.0-2) 13.2.0
+ 
+Unidades:
+     Las unidades que hemos empleado en todas las pruebas son microsegundos.
+
+
+Algoritmo 1 con una complejidad de O(n^2): 
+
+int sumaSubMax1 ( int v[], int n){
+    int sumaMax=0, estaSuma;
+    for (int i=0 ; i<n; i++){
+        estaSuma=0;
+        for (int j=i; j<n; j++){
+            estaSuma = estaSuma + v[j];
+            if (estaSuma > sumaMax){
+                sumaMax = estaSuma;
+            }
+        }
+    }
+    return sumaMax;
+}
+
+Algoritmo 2 con una complejidad de O(n):
+
+int sumaSubMax2(int v[], int n){
+    int estaSuma = 0;
+    int sumaMax = 0;
+    for(int j=0; j<n; j++){
+        estaSuma = estaSuma + v[j];
+        if(estaSuma > sumaMax){
+            sumaMax = estaSuma;
+        }else if(estaSuma < 0){
+            estaSuma = 0;
+        }
+    }
+    return sumaMax;
+}
+
+Método empleado:
+
+      Lo primero que hacemos es comprobar que nusetros algoritmos funcionan
+   de forma correcta con los vectores presentados en el ejemplo y con 
+   vectores creados de forma pseudoaleatoria. Tras ello, creamos dos funciones
+   para medir los tiempos que tarda cada algoritmo en buscar dicha suma, que
+   consistente en comprobar la hora de la máquina antes y después de ejecutar
+   el algoritmo correspondiente.
+   
+      Cabe destacar que para tiempos menores de 500ms calcularemos los tiempos
+   de los algoritmos mediante la siguiente formula: (tb-ta)/k (donde k son las
+   repeteciones, en este caso 1000; tb, que corresponde a la hora del sistema
+   después de ejecutar el algoritmo; y ta, que corresponde a la hora del sistema
+   antes de ejecutar el algoritmo) Estos casos se marcarán en la tabla con un
+   "*" al final de la línea. 
+  
+      Ejecutamos nuestro código 10 veces para evitar mediciones anómalas, de
+   las cuales no detectamos ningúna, y comprobamos que los tiempos (t(n))
+   devueltos por nuestras funciones son correctos y los registramos en una
+   tabla con su respectiva cantidad de valores (n), en la que más tarde
+   calcularemos sus correspondientes cotas.
+  
+
+Resultados:
+
+sumaSubmax1
+
+   - Cota subestimada: f(n) = n^1.8
+   - Cota ajustada: g(n) = n^2
+   - Cota sobreestimada: h(n) = n^2.2
+
+n	t(n)		t(n)/f(n)	t(n)/g(n)	t(n)/h(n)	t<500
+
+500	189.563		0.002627	0.000758	0.000219	*
+1000	779.000		0.003101	0.000779	0.000196
+2000	2962.000	0.003386	0.000741	0.000162
+4000	11829.000	0.003883	0.000739	0.000141
+8000	47397.000	0.004468	0.000741	0.000123
+16000	190322.000	0.005153	0.000743	0.000107
+32000	770218.000	0.005988	0.000752	0.000094
+
+   La cota ajustada tiende a la constante C=0.000750
+			
+					
+sumaSubmax2
+
+   - Cota subestimada: f(n) = n^0.8
+   - Cota ajustada: g(n) = n
+   - Cota sobreestimada: h(n) = n^1.2
+
+n	t(n)		t(n)/f(n)	t(n)/g(n)	t(n)/h(n)	t<500
+	
+500	1.230		0.008526	0.002460	0.000710	*
+1000	2.266		0.009021	0.002266	0.000569	*
+2000	4.138		0.009462	0.002069	0.004524	*
+4000	7.785		0.010224	0.001946	0.000370	*
+8000	14.747		0.011123	0.001843	0.000306	*
+16000	29.252		0.012672	0.001828	0.000264	*
+32000	57.795		0.014380	0.001806	0.000227	*
+
+   La cota ajustada tiende a la constante C=0.001800
+
+
+Conclusión:
+
+      Tras observar los resultados aportados por nuestras tablas afirmamos con
+   seguridad que, el algoritmo sumaSubMax2, es más rápido para realizar esta
+   operación en comparación con el algoritmo sumaSubMax1. 
+   
+      Además, la complejidad empírica de buscar la suma máxima con el algorítmo
+   sumaSubMax1 es igual a la complejidad teórica O(n^2). Sin embargo, para el
+   algoritmo sumaSubMax2 observamos que la complejidad empírica podría ser
+   ligeramente mejor que la complejidad teórica O(n).
+   
+

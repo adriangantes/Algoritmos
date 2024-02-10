@@ -1,0 +1,288 @@
+
+Fecha: 18/10/23                                      Grupo: 1.2
+
+ # Informe Algoritmos P2 (Algoritmos de ordenación) #
+
+
+Nombres/Logins:
+
+ * AUTHOR 1: Adrián Edreira Gantes    LOGIN 1: adrian.gantes@udc.es
+ * AUTHOR 2: Ángela Fouz Suárez       LOGIN 2: angela.fouz@udc.es
+ * AUTHOR 3: Gael Saavedra Pinho      LOGIN 3: g.spinho@udc.es
+
+
+Objetivo:
+
+    En esta práctica utilizaremos dos algoritmos de ordenación distintos, el
+  primero será ordenación por inserción y el segundo ordenación Shell.
+  
+    Nuestro objetivo es demostrar la complejidad empírica de dichos algoritmos
+  para 3 casos diferentes (vectores aleatorios, descendentes y ascendentes),
+  obteniendo sus tiempos de ejecución y calculando su complejidad teórica.
+
+
+Especificaciones de la máquina:
+
+  + Equipo: Victus by HP Laptop 16-d1033ns
+  + OS: Kali GNU/Linux Rolling 2023.3
+  + Procesador: Intel Core i7-12700H, 4.7GHz, 24 MB L3 cache,
+ 	        14 núcleos y 20 hilos.
+  + RAM: 16 GB DDR5-4800 Mhz (2 x 8 GB)
+  + Kernel: Linux 6.5.0-kali1-amd64
+  + Compilador: gcc (Debian 13.2.0-2) 13.2.0
+
+
+Unidades:
+
+  Las unidades empleadas para la medida de los tiempos son microsegundos(micros).
+
+
+Algoritmo 1, ordenación por inserción:
+
+void ord_ins (int v[], int n){
+
+    int x, j, i;
+
+    for (i = 1; i<n;i++){
+        x = v[i];
+        j = i-1;
+        while (j >= 0 && v[j] > x){
+            v[j+1] = v[j];
+            --j;
+        }
+        v[j+1] = x;
+    }
+}
+
+
+Algoritmo 2, ordenación shell:
+
+void ord_shell (int v[],int n){
+
+    int incremento = n , tmp, j, i;
+    bool seguir;
+
+    do{
+        incremento = incremento/ 2;
+        for(i = incremento; i < n ; i++){
+            tmp = v[i];
+            j = i;
+            seguir = true;
+            while(j-incremento >= 0 && seguir){
+                if(tmp < v[j-incremento]){
+                    v[j] = v[j-incremento];
+                    j = j - incremento;
+                }else{
+                    seguir = false;
+                }
+            }
+            v[j] = tmp;
+        }
+        
+    }while(incremento != 1);
+}
+
+
+Método Empleado:
+
+    Lo primero que hicimos es calcular la complejidad de ambos algoritmos para cada
+  tipo de vector, obteniendo así las complejidades teóricas más adelante mostradas.
+  
+    Después de ello, lo que hicimos fue comprobar que ambos algoritmos de ordenación
+  implementados funcionan correctamente con vectores descendentes y con vectores 
+  pseudoaleatorios. Tras ello creamos dos funciones para medir los tiempos de 
+  ejecución de cada algoritmo con cada tipo de vector, comprobando la hora de la
+  máquina antes y después de ejecutar el algoritmo correspondiente.
+
+    Cabe destacar que para tiempos menores de 500micros calcularemos los tiempos
+  de los algoritmos mediante la siguiente formula: (tb-ta)/k (donde k son las
+  repeticiones, en este caso 1000; tb, que corresponde a la hora del sistema
+  después de ejecutar el algoritmo; y ta, que corresponde a la hora del sistema
+  antes de ejecutar el algoritmo). Estos casos se marcarán en la tabla con un
+  "*" al final de la línea. 
+
+    Ejecutamos nuestro código 15 veces para evitar mediciones anómalas, de
+  las cuales no detectamos ninguna, y comprobamos que los tiempos (t(n))
+  devueltos por nuestras funciones son correctos y los registramos en una
+  tabla con su respectiva cantidad de valores (n) y sus correspondientes cotas.
+  
+
+Cálculo de complejidad teórica:
+
+    La forma empleada para calcular la complejidad de cada algoritmo es
+  observando los bucles anidados y multiplicando su complejidad.
+  
+    Para el primer algoritmo, en el caso de un vector aleatorio suponemos que
+  la mitad de los datos estarán ordenados y la otra mitad no, obteniendo O(n/2)
+  que es igual a O(n), con una complejidad total de O(n²); en el caso de un vector
+  descendente tendremos que ordenar todos los datos, estamos en el peor caso, 
+  obteniendo una complejidad total de O(n²); y para un vector ascendente estaremos
+  ante el mejor caso, obteniendo una complejidad total de O(n), porque no tendremos
+  que ordenar los datos.
+  
+    Para el segundo algoritmo, en todos los casos tendremos que recorrer el vector
+  menos de la mitad de su tamaño gracias a la variable "incrementos", consiguiendo
+  una complejidad de O(log(n)), lo que nos permite ordenar el vector obteniendo una
+  complejidad de O(n) en cualquier caso inicial del vector, lo que nos da una
+  complejidad total de O(n * log(n)).
+  
+  
+  * Algoritmo de inserción:
+     - Aleatorio:    O (n²)
+     - Descendente:  O (n²)
+     - Ascendente:   O (n)
+
+  * Algoritmo Shell:
+     - Aleatorio:    O (n * log(n)) 
+     - Descendente:  O (n * log(n))
+     - Ascendente:   O (n * log(n))
+
+
+Resultados:
+		
+		
+ # Algoritmo de Inserción #
+
+ Vector aleatorio:
+ 
+   - Cota subestimada: f(n) = n^1.8
+   - Cota ajustada: g(n) = n^2
+   - Cota sobreestimada: h(n) = n^2.2
+			
+  n            t(n)        t(n)/f(n)       t(n)/g(n)       t(n)/h(n)     t<500
+
+  500        107.770       0.001494        0.000431        0.000124        *
+ 1000        266.430       0.001061        0.000266        0.000067        *
+ 2000       1171.000       0.001339        0.000293        0.000064
+ 4000       4913.000       0.001613        0.000307        0.000058
+ 8000      16732.000       0.001578        0.000261        0.000043
+16000      66218.000       0.001793        0.000259        0.000037
+32000     260732.000       0.002027        0.000255        0.000032
+
+   La cota ajustada tiende a la constante C=0.000260
+
+  
+ Vector descendente:
+
+   - Cota subestimada: f(n) = n^1.8
+   - Cota ajustada: g(n) = n^2
+   - Cota sobreestimada: h(n) = n^2.2
+	
+  n            t(n)        t(n)/f(n)       t(n)/g(n)       t(n)/h(n)     t<500
+  
+  500        127.040       0.001761        0.000508        0.000147        *
+ 1000        554.000       0.002206        0.000554        0.000139
+ 2000       1992.000       0.002277        0.000498        0.000109
+ 4000       8495.000       0.002789        0.000531        0.000101
+ 8000      32670.000       0.003080        0.000510        0.000085
+16000     128464.000       0.003478        0.000502        0.000072
+32000     528857.000       0.004112        0.000516        0.000065
+
+   La cota ajustada tiende a la constante C=0.000510
+	
+	
+ Vector ascendente:
+
+   - Cota subestimada: f(n) = n^0.8
+   - Cota ajustada: g(n) = n
+   - Cota sobreestimada: h(n) = n^1.2
+
+  n            t(n)        t(n)/f(n)       t(n)/g(n)       t(n)/h(n)     t<500
+
+  500          0.740       0.005129        0.001480        0.000427        *
+ 1000          1.660       0.006609        0.001660        0.000417        *
+ 2000          3.590       0.008209        0.001795        0.000393        *
+ 4000          7.400       0.009718        0.001850        0.000352        *
+ 8000         15.180       0.011450        0.001897        0.000354        *
+16000         31.770       0.013763        0.001986        0.000286        *
+32000         54.490       0.013558        0.001703        0.000214        *
+
+   La cota ajustada tiende a la constante C=0.001700
+
+
+
+ # Algoritmo Shell #
+
+ Vector aleatorio:
+
+   - Cota subestimada: f(n) = n
+   - Cota ajustada: g(n) = nlog(n)
+   - Cota sobreestimada: h(n) = n^1.5
+
+  n            t(n)        t(n)/f(n)       t(n)/g(n)       t(n)/h(n)     t<500
+
+  500         36.230       0.072460        0.011660        0.003241        *
+ 1000         89.040       0.089040        0.012890        0.002816        *
+ 2000        204.050       0.102025        0.013423        0.002281        *
+ 4000        446.800       0.111700        0.013467        0.001766        *
+ 8000        992.000       0.124000        0.013797        0.001386
+16000       2252.000       0.140750        0.014540        0.001113
+32000       5132.000       0.160375        0.015460        0.000897
+
+   La cota ajustada tiende a la constante C=0.014000
+
+
+ Vector descendente:
+
+   - Cota subestimada: f(n) = n
+   - Cota ajustada: g(n) = nlog(n)
+   - Cota sobreestimada: h(n) = n^1.5
+
+  n            t(n)        t(n)/f(n)       t(n)/g(n)       t(n)/h(n)     t<500
+
+  500         11.060       0.022120        0.003559        0.000989        *
+ 1000         23.370       0.023370        0.003383        0.000739        *
+ 2000         58.340       0.029170        0.003838        0.000652        *
+ 4000        120.740       0.030185        0.003639        0.000477        *
+ 8000        268.320       0.033540        0.003732        0.000375        *
+16000        545.000       0.034063        0.003519        0.000269
+32000       1171.000       0.036594        0.003528        0.000205
+
+   La cota ajustada tiende a la constante C=0.003500
+
+
+ Vector ascendente:
+
+   - Cota subestimada: f(n) = n
+   - Cota ajustada: g(n) = nlog(n)
+   - Cota sobreestimada: h(n) = n^1.5
+
+  n            t(n)        t(n)/f(n)       t(n)/g(n)       t(n)/h(n)     t<500
+
+  500          6.940       0.013880        0.002233        0.000621        *
+ 1000         15.890       0.015890        0.002300        0.000502        *
+ 2000         35.550       0.017775        0.002339        0.000397        *
+ 4000         80.660       0.020165        0.002431        0.000319        *
+ 8000        174.210       0.021776        0.002423        0.000243        *
+16000        384.140       0.024009        0.002480        0.000190        *
+32000        846.000       0.026437        0.002549        0.000148
+
+   La cota ajustada tiende a la constante C=0.002400
+
+
+Conclusión:
+
+    Según los resultados obtenidos hemos llegado a las siguientes conclusiones:
+    
+      - La complejidad teórica de la ordenación por inserción es O(n) en el mejor
+        caso y O(n^2) en el peor, igual a la complejidad empírica obtenida en las
+        tablas.
+       
+      - Por otro lado, la complejidad empírica de la ordenación shell es la esperada
+        a la calculada como complejidad teórica, O(n log(n)).
+        
+      - Observando las tablas podemos deducir dos cosas. Primero vemos que para la
+        tarea de ordenación de un vector el algoritmo de ordenación Shell es mucho
+        más eficaz que la ordenación por inserción; y segundo, para un vector
+        previamente ordenado la ordenación por inserción es extramadamente eficaz,
+        con unos tiempos de ejecución ideales.
+        
+      - Por último, debido a los resultados obtenidos podemos afirmar que una
+        implementación de ambos algoritmos sería ideal para la tarea de ordenar
+        vectores, modificando ligeramente la ordenación por inserción para que
+        únicamente nos diga si un vector esta ordenado, y posteriormente utilizando
+        la ordenación Shell en caso de tener un vector ordenado, reduciendo el
+        tiempo de ejecución considerablemente si un vector esta previamente ordenado.
+
+
+
